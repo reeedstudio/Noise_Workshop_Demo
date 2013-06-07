@@ -1,9 +1,9 @@
 /*
-  BeaconSensor.h
+  NWDfs.h
   2013 Copyright (c) Seeed Technology Inc.  All right reserved.
 
   Author:Loovee
-  *dat3*
+  2013-06-07
  
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
 #ifndef __NWDFS_H__
 #define __NWDFS_H__
 
-#define VOLINH          384
+#define VOLINH          328
 #define VOLINL          0
 #define VOLOUTH         10
 #define VOLOUTL         0

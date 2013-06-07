@@ -1,14 +1,33 @@
-/*-----------------------------------------------------------------------
+/*-----------------------------------------------------------------------------------
 ** demo of noise workshop demo, for chaihuo
 ** loovee 2013-6-7
 ** https://github.com/reeedstudio/Noise_Workshop_Demo
 **
-** grove - camera plug to   D6(and D7)
+** grove - camera plug to   D6(& D7)
 ** grove - button plug to   D2
-** grove - led bar plug to  D8(and D9)
+** grove - led bar plug to  D8(& D9)
 ** grove - sound sensor plug to A0
 ** grove - buzzer plug to D3
-**---------------------------------------------------------------------*/
+**
+** you need to change something in this file: 
+** in \hardware\arduino\cores\arduino\HardwareSerial.cpp
+** you can find: #define SERIAL_BUFFER_SIZE 64
+** modify it to: #define SERIAL_BUFFER_SIZE 128
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License as published by the Free Software Foundation; either
+** version 2.1 of the License, or (at your option) any later version.
+** 
+** This library is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+** Lesser General Public License for more details.
+** 
+** You should have received a copy of the GNU Lesser General Public
+** License along with this library; if not, write to the Free Software
+** Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+**--------------------------------------------------------------------------------*/
 
 #include <TimerOne.h>
 #include <Streaming.h>
