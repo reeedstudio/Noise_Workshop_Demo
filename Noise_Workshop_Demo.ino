@@ -36,12 +36,12 @@ int getNoise()
     
 }
 
-void setBar(int in)
+void setBar(int vol)
 {
-    in = in>10 ? 10 : (in<1 ? 1 : in);
+    vol = vol>10 ? 10 : (vol<1 ? 1 : vol);
     
     unsigned int tmp = 0;
-    for(int i=0; i<in; i++)
+    for(int i=0; i<vol; i++)
     {
         tmp += 0x01<<(9-i);
         myLED.set_LED_Index(tmp);
