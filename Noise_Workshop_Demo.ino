@@ -32,7 +32,9 @@
 #include <TimerOne.h>
 #include <Streaming.h>
 #include <LED_Bar.h>
+#include <SD.h>
 
+#include "SerialCamera.h"
 #include "NWDfs.h"
 
 LED_Bar myLED;
@@ -70,19 +72,24 @@ void setBar(int vol)
 
 void setup()
 {
-    Serial.begin(38400);
+    Serial.begin(115200);
     myLED.set_LED_Index(0);
     
     pinMode(PINBUTTON, INPUT);
     pinMode(PINBUZZER, OUTPUT);
 
     cout << "hello world" << endl;
-    Timer1.initialize(1000);
-    Timer1.attachInterrupt(timerIsr);
+    // Timer1.initialize(1000);
+    // Timer1.attachInterrupt(timerIsr);
+    
+    scInit();
+
 }
 
 int vol     = 0;
 int volBuf  = 0;
+
+int fixN = 0;
 
 void loop()
 {
@@ -94,7 +101,7 @@ void loop()
     {
         volBuf = vol;
         setBar(volBuf);
-        cout << volBuf << endl;
+        // cout << volBuf << endl;
     }
     
     
@@ -105,6 +112,16 @@ void loop()
         {
             while(BTNSTATE());
             BEEPON();
+            if(fixN == 0)
+            {
+                Capture();
+            }
+            else 
+            {
+                ContCapture();
+            }
+            fixN++;
+            GetData();
             delay(200);
             BEEPOFF();
         }
