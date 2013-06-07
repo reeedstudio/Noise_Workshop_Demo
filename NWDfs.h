@@ -27,7 +27,18 @@
 #define VOLINL          0
 #define VOLOUTH         10
 #define VOLOUTL         0
-          
+
+// pin define
+#define PINBUTTON       2
+#define PINBUZZER       3
+
+
+// buzzer
+#define BEEPON()        digitalWrite(PINBUZZER, HIGH)
+#define BEEPOFF()       digitalWrite(PINBUZZER, LOW)
+
+// button
+#define BTNSTATE()     digitalRead(PINBUTTON)
 
 #endif
 

@@ -1,15 +1,22 @@
-// demo of noise workshop demo, for chaihuo
-// loovee 2013-6-7 https://github.com/reeedstudio/Noise_Workshop_Demo
-// grove - camera plug to
-// grove - button plug to
-// 
+/*-----------------------------------------------------------------------
+** demo of noise workshop demo, for chaihuo
+** loovee 2013-6-7
+** https://github.com/reeedstudio/Noise_Workshop_Demo
+**
+** grove - camera plug to   D6(and D7)
+** grove - button plug to   D2
+** grove - led bar plug to  D8(and D9)
+** grove - sound sensor plug to A0
+** grove - buzzer plug to D3
+**---------------------------------------------------------------------*/
+
 #include <TimerOne.h>
 #include <Streaming.h>
 #include <LED_Bar.h>
 
-LED_Bar myLED;
-
 #include "NWDfs.h"
+
+LED_Bar myLED;
 
 int getNoise()
 {
@@ -45,11 +52,12 @@ void setBar(int in)
 void setup()
 {
     Serial.begin(38400);
+    myLED.set_LED_Index(0);
     
-    myLED.set_LED_Index(0b000001101010101);
-    delay(1000);
+    pinMode(PINBUTTON, INPUT);
+    pinMode(PINBUZZER, OUTPUT);
+
     cout << "hello world" << endl;
-    
     Timer1.initialize(1000);
     Timer1.attachInterrupt(timerIsr);
 }
@@ -68,6 +76,19 @@ void loop()
         volBuf = vol;
         setBar(volBuf);
         cout << volBuf << endl;
+    }
+    
+    
+    if(BTNSTATE())
+    {
+        delay(10);
+        if(BTNSTATE())
+        {
+            while(BTNSTATE());
+            BEEPON();
+            delay(200);
+            BEEPOFF();
+        }
     }
     
     delay(10);
