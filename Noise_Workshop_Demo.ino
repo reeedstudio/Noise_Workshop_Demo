@@ -9,7 +9,7 @@
 ** grove - sound sensor plug to A0
 ** grove - buzzer plug to D3
 **
-** you need to change something in this file: 
+** you need to change something in this file:
 ** in \hardware\arduino\cores\arduino\HardwareSerial.cpp
 ** you can find: #define SERIAL_BUFFER_SIZE 64
 ** modify it to: #define SERIAL_BUFFER_SIZE 128
@@ -18,12 +18,12 @@
 ** modify it under the terms of the GNU Lesser General Public
 ** License as published by the Free Software Foundation; either
 ** version 2.1 of the License, or (at your option) any later version.
-** 
+**
 ** This library is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ** Lesser General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU Lesser General Public
 ** License along with this library; if not, write to the Free Software
 ** Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -40,6 +40,48 @@
 
 LED_Bar myLED;
 
+int fileNum = 0;
+
+
+char *getFileName(int n)
+{
+    char filename[20];
+    if(n<10)
+    {
+        sprintf(filename, "NOISE00%d.txt", n);
+    }
+    else if(n<100)
+    {
+        sprintf(filename, "NOISE0%d.txt", n);
+    }
+    else
+    {
+        sprintf(filename, "NOISE%d.txt", n);
+    }
+    
+    return filename;
+}
+
+int getFileNum()
+{
+    int n=0;
+    char filename[20];
+    while(1)
+    {
+
+        if (SD.exists(getFileName(n)))
+        {
+            cout << filename << " exist" << endl;
+            n++;
+        }
+        else
+        {
+            return n;
+        }
+    }
+
+}
+
 int getNoise()
 {
 
@@ -50,52 +92,55 @@ int getNoise()
     }
 
     vol = vol>>5;
-    
+
     vol = vol>VOLINH ? VOLINH : (vol<VOLINL ? VOLINL : vol);
     vol = map(vol, VOLINL, VOLINH, VOLOUTL, VOLOUTH);
-    
+
     return vol;
-    
+
 }
 
 void setBar(int vol)
 {
     vol = vol>10 ? 10 : (vol<1 ? 1 : vol);
-    
+
     unsigned int tmp = 0;
     for(int i=0; i<vol; i++)
     {
         tmp += 0x01<<(9-i);
         myLED.set_LED_Index(tmp);
-    }  
-    
+    }
+
 }
 
 void setup()
 {
     Serial.begin(115200);
     myLED.set_LED_Index(0);
-    
+
     pinMode(PINBUTTON, INPUT);
     pinMode(PINBUZZER, OUTPUT);
 
     cout << "hello world" << endl;
     // Timer1.initialize(1000);
     // Timer1.attachInterrupt(timerIsr);
-    
+
     scInit();
+
+    fileNum = getFileNum();
+
+    cout << "fileNum = " << endl;
 
 }
 
 int vol     = 0;
 int volBuf  = 0;
-
 int fixN = 0;
 
 void loop()
 {
     // add code here
-    
+
     vol = getNoise();
 
     if(vol != volBuf)
@@ -104,8 +149,8 @@ void loop()
         setBar(volBuf);
         // cout << volBuf << endl;
     }
-    
-    
+
+
     if(BTNSTATE())
     {
         delay(10);
@@ -113,21 +158,15 @@ void loop()
         {
             while(BTNSTATE());
             BEEPON();
-            if(fixN == 0)
-            {
-                Capture();
-            }
-            else 
-            {
-                ContCapture();
-            }
-            fixN++;
-            GetData();
+
+            char fileName[20];
+
+            takePhoto(getFileName(fileNum++));
             delay(200);
             BEEPOFF();
         }
     }
-    
+
     delay(10);
 
 }
