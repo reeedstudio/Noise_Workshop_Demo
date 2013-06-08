@@ -40,38 +40,40 @@
 
 LED_Bar myLED;
 
+char fileNameTemp[20];
+
 int fileNum = 0;
 
 
 char *getFileName(int n)
 {
-    char filename[20];
+
     if(n<10)
     {
-        sprintf(filename, "NOISE00%d.txt", n);
+        sprintf(fileNameTemp, "NOISE00%d.jpg", n);
     }
     else if(n<100)
     {
-        sprintf(filename, "NOISE0%d.txt", n);
+        sprintf(fileNameTemp, "NOISE0%d.jpg", n);
     }
     else
     {
-        sprintf(filename, "NOISE%d.txt", n);
+        sprintf(fileNameTemp, "NOISE%d.jpg", n);
     }
     
-    return filename;
+    return fileNameTemp;
 }
 
 int getFileNum()
 {
     int n=0;
-    char filename[20];
+
     while(1)
     {
 
         if (SD.exists(getFileName(n)))
         {
-            cout << filename << " exist" << endl;
+            cout << fileNameTemp << " exist" << endl;
             n++;
         }
         else
@@ -129,7 +131,7 @@ void setup()
 
     fileNum = getFileNum();
 
-    cout << "fileNum = " << endl;
+    cout << "fileNum = " << fileNum << endl;
 
 }
 
@@ -158,10 +160,8 @@ void loop()
         {
             while(BTNSTATE());
             BEEPON();
-
-            char fileName[20];
-
             takePhoto(getFileName(fileNum++));
+            cout << endl << "take over: " << fileNameTemp << endl;
             delay(200);
             BEEPOFF();
         }
