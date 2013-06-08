@@ -152,7 +152,7 @@ void readCamSaveToFile(File &myFile, int toBeReadLen)
         readLen++;
     }
     
-    for(char i = 0; i < 5; i++)                 // read the signal of sussessful sending
+    for(char i = 0; i < 5; i++)                 // read the signal of successful sending
     { 
         Serial.read();
     }

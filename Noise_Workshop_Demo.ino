@@ -33,6 +33,7 @@
 #include <Streaming.h>
 #include <LED_Bar.h>
 #include <SD.h>
+#include <EEPROM.h>
 
 #include "SerialCamera.h"
 #include "NWDfs.h"
