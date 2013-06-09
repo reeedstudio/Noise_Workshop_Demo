@@ -23,6 +23,8 @@
 #ifndef __NWDFS_H__
 #define __NWDFS_H__
 
+#define __Debug         0
+
 #define VOLINH          328
 #define VOLINL          0
 #define VOLOUTH         10
@@ -30,7 +32,7 @@
 
 // pin define
 #define PINBUTTON       2
-#define PINBUZZER       3
+#define PINBUZZER       6
 
 
 // buzzer
@@ -39,6 +41,12 @@
 
 // button
 #define BTNSTATE()     digitalRead(PINBUTTON)
+
+#if defined(__AVR_ATmega32U4__)
+#define UART    Serial1
+#else
+#define UART    Serial
+#endif
 
 #endif
 

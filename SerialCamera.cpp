@@ -20,9 +20,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "SerialCamera.h"
-
 #include <SD.h>
+#include <Streaming.h>
+
+#include "SerialCamera.h"
+#include "NWDfs.h"
 
 File myFile;
 
@@ -37,11 +39,13 @@ void Restart()
     sendCmd(cmdRST, 4);
     delay(1000);
 
-    while(Serial.available() > 0)
+    while(UART.available() > 0)
     {
-        Serial.write(Serial.read());
+        UART.write(UART.read());
     }
-    Serial.println("Camera initialization done.");
+#if __Debug
+    cout << "Camera initialization done.";
+#endif
 }
 
 void Capture()
@@ -49,9 +53,9 @@ void Capture()
     char cmdCAP[] = {0x56,0x00,0x36,0x01,0x00};                 //Take picture command
     sendCmd(cmdCAP, 5);
     delay(50);
-    while(Serial.available() > 0)
+    while(UART.available() > 0)
     {
-        Serial.read();
+        UART.read();
     }
 }
 
@@ -62,9 +66,9 @@ void ContCapture()
 
     delay(50);
 
-    while(Serial.available() > 0)
+    while(UART.available() > 0)
     {
-        Serial.write(Serial.read());
+        UART.write(UART.read());
     }
 }
 
@@ -84,15 +88,15 @@ void GetData(char * fileName)
 
     for(char i = 0; i < 7; i++)
     {
-        Serial.read();
+        UART.read();
     }
 
     picTotalLen = 0;
 
-    int high = Serial.read();
+    int high = UART.read();
     picTotalLen |= high ;
 
-    int low  = Serial.read();
+    int low  = UART.read();
     picTotalLen = picTotalLen << 8 ;
     picTotalLen |= low ;                                        // get the length of picture
 
@@ -108,7 +112,9 @@ void GetData(char * fileName)
 
     if(!myFile)
     {
-        Serial.println("myFile open fail...");
+#if __Debug
+        cout << "myFile open fail...";
+#endif
     }
     else
     {
@@ -138,18 +144,18 @@ void readCamSaveToFile(File &myFile, int toBeReadLen)
 
     for(char i = 0; i < 5; i++)                  // read the signal that tells us that it's ready to send data
     {
-        Serial.read();
+        UART.read();
     }
 
     while(readLen < toBeReadLen)                // read and store the JPG data that starts with 0xFF 0xDB
     {
-        myFile.write(Serial.read());
+        myFile.write(UART.read());
         readLen++;
     }
 
     for(char i = 0; i < 5; i++)                 // read the signal of successful sending
     {
-        Serial.read();
+        UART.read();
     }
 }
 
@@ -157,21 +163,24 @@ void sendCmd(char *cmd, int cmd_len)
 {
     for(int i = 0; i < cmd_len; i++)
     {
-        Serial.print(cmd[i]);
+        UART.print(cmd[i]);
     }
 }
 
 unsigned char scInit()
 {
     pinMode(10,OUTPUT);          // CS pin of SD Card Shield
-
-    if (!SD.begin(10))
+   
+    if (!SD.begin(4))
     {
-        Serial.print("initialzation failed");
+#if __Debug
+        cout << "initialzation failed";
+#endif
         return 0;
     }
-
-    Serial.println("initialization done.");
+#if __Debug
+    cout << "initialization done.";
+#endif
     Restart();
     return 1;
 }

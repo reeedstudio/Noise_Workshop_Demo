@@ -3,11 +3,11 @@
 ** loovee 2013-6-7
 ** https://github.com/reeedstudio/Noise_Workshop_Demo
 **
-** grove - camera plug to   D6(& D7)
+** grove - camera plug to   D0(&D1)
 ** grove - button plug to   D2
 ** grove - led bar plug to  D8(& D9)
 ** grove - sound sensor plug to A0
-** grove - buzzer plug to D3
+** grove - buzzer plug to D6
 **
 ** you need to change something in this file:
 ** in \hardware\arduino\cores\arduino\HardwareSerial.cpp
@@ -73,7 +73,9 @@ int getFileNum()
 
         if (SD.exists(getFileName(n)))
         {
+#if __Debug
             cout << fileNameTemp << " exist" << endl;
+#endif
             n++;
         }
         else
@@ -117,22 +119,31 @@ void setBar(int vol)
 
 void setup()
 {
+    UART.begin(115200);
+
+#if __Debug && defined(__AVR_ATmega32U4__)
     Serial.begin(115200);
+    while(!Serial);
+#endif
     myLED.set_LED_Index(0);
 
     pinMode(PINBUTTON, INPUT);
     pinMode(PINBUZZER, OUTPUT);
+    
 
+    BEEPON();
+    delay(500);
+    BEEPOFF();
+
+#if __Debug
     cout << "hello world" << endl;
-    // Timer1.initialize(1000);
-    // Timer1.attachInterrupt(timerIsr);
-
+#endif
     scInit();
 
     fileNum = getFileNum();
-
+#if __Debug
     cout << "fileNum = " << fileNum << endl;
-
+#endif
 }
 
 int vol     = 0;
@@ -149,7 +160,6 @@ void loop()
     {
         volBuf = vol;
         setBar(volBuf);
-        // cout << volBuf << endl;
     }
 
 
@@ -160,20 +170,24 @@ void loop()
         {
             while(BTNSTATE());
             BEEPON();
+            delay(50);
+            BEEPOFF();
             takePhoto(getFileName(fileNum++));
+#if __Debug
             cout << endl << "take over: " << fileNameTemp << endl;
-            delay(200);
+#endif
+            BEEPON();
+            delay(50);
+            BEEPOFF();
+            delay(100);
+            BEEPON();
+            delay(50);
             BEEPOFF();
         }
     }
 
     delay(10);
 
-}
-
-void timerIsr()
-{
-    // add code here
 }
 
 /*********************************************************************************************************
