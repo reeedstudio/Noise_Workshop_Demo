@@ -25,7 +25,7 @@
 
 #define __Debug         0
 
-#define VOLINH          328
+#define VOLINH          512
 #define VOLINL          0
 #define VOLOUTH         10
 #define VOLOUTL         0

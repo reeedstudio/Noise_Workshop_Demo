@@ -176,6 +176,8 @@ unsigned char scInit()
 #if __Debug
         cout << "initialzation failed";
 #endif
+
+        while(1);
         return 0;
     }
 #if __Debug
